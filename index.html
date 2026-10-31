@@ -211,6 +211,8 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 .opt::before{content:counter(opt,upper-alpha) ") ";color:var(--pink);font-family:var(--f-display);font-weight:800}
 .hat3d{border:2px solid var(--line);border-radius:14px;background:linear-gradient(#F7EBD3,#E9D3A8);overflow:hidden}
 .hat3d canvas{display:block;touch-action:none;cursor:grab}
+.reset-btn{font:inherit;font-family:var(--f-display);font-weight:800;font-size:17px;border:3px solid var(--pink);background:var(--surface);color:var(--pink);border-radius:14px;padding:6px 16px;cursor:pointer}
+.reset-btn.sure{background:var(--pink);color:#FFF}
 .chip.tl{background:#E30A17;color:#FFF}
 .map{width:100%;border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:#9FD0E6}
 .map svg{display:block;width:100%;height:auto}
@@ -271,6 +273,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
   <header class="top">
     <div class="brand"><h1>Kaan <span>Pakistan'da</span></h1>
       <p>Önce kısaca öğren, sonra oyna. Biraz oyun, biraz bilgi!</p></div>
+    <button class="reset-btn" id="resetAll" type="button">↺ Baştan başla</button>
   </header>
   <div class="trim" aria-hidden="true"></div>
   <div class="tabs" role="tablist">
@@ -1362,6 +1365,13 @@ function tick(now){if(window.__mode==="maze"){
  draw(now)}requestAnimationFrame(tick)}
 setupLevel();resize();learnCard();requestAnimationFrame(tick);
 if(correct>0)msg(`Kaldığın yerden devam: ${lv+1}. bölüm.`,"ok");
+})();
+</script>
+<script>
+(function(){const b=document.getElementById("resetAll");let t=0;
+ b.onclick=()=>{if(!b.classList.contains("sure")){b.classList.add("sure");b.textContent="Emin misin? Tekrar bas";clearTimeout(t);t=setTimeout(()=>{b.classList.remove("sure");b.textContent="↺ Baştan başla"},4000);return}
+  try{["kaan-pk","kaan-pk2","kaan-pk3","kaan-maze2"].forEach(k=>localStorage.removeItem(k))}catch(e){}
+  b.textContent="Sıfırlanıyor...";try{location.reload()}catch(e){}};
 })();
 </script>
 
