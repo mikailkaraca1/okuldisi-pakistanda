@@ -211,6 +211,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 .opt::before{content:counter(opt,upper-alpha) ") ";color:var(--pink);font-family:var(--f-display);font-weight:800}
 .hat3d{border:2px solid var(--line);border-radius:14px;background:linear-gradient(#F7EBD3,#E9D3A8);overflow:hidden}
 .hat3d canvas{display:block;touch-action:none;cursor:grab}
+.roadmark{position:absolute;left:14px;bottom:3px;z-index:1;font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.1em;color:#FFC233;text-shadow:0 1px 0 #10261B}
 .reset-btn{font:inherit;font-family:var(--f-display);font-weight:800;font-size:17px;border:3px solid var(--pink);background:var(--surface);color:var(--pink);border-radius:14px;padding:6px 16px;cursor:pointer}
 .reset-btn.sure{background:var(--pink);color:#FFF}
 .chip.tl{background:#E30A17;color:#FFF}
@@ -272,40 +273,12 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 <div class="wrap">
   <header class="top">
     <div class="brand"><h1>Kaan <span>Pakistan'da</span></h1>
-      <p>Önce kısaca öğren, sonra oyna. Biraz oyun, biraz bilgi!</p></div>
+      <p>Kaan ile İstanbul'dan Pakistan'a: gez, öğren, damgaları topla!</p></div>
     <button class="reset-btn" id="resetAll" type="button">↺ Baştan başla</button>
   </header>
   <div class="trim" aria-hidden="true"></div>
-  <div class="tabs" role="tablist">
-    <button class="tab on" id="tabMaze" role="tab" aria-selected="true">Bilgi Labirenti</button>
-    <button class="tab" id="tabStreet" role="tab" aria-selected="false">Sokak Turu</button>
-  </div>
-
-  <section id="modeMaze" class="mz">
-    <div class="mz-hud">
-      <div class="lives" id="mzLives" aria-label="Canlar"></div>
-      <div class="mz-stat">Bölüm <b id="mzLv">1</b>/10</div>
-      <div class="mz-stat" id="mzMon">Canavar: 1 · Hız: 1</div>
-    </div>
-    <div class="mz-q" id="mzQ">Soru burada görünecek</div>
-    <div class="mz-wrap" id="mzWrap">
-      <canvas id="mzCv" aria-label="Labirent"></canvas>
-      <div class="mz-ov" id="mzOv"></div>
-    </div>
-    <div class="legend" id="mzLeg"></div>
-    <div class="mz-msg" id="mzMsg" aria-live="polite"></div>
-    <div class="mz-controls">
-      <div class="dpad">
-        <button class="pad" data-d="up" aria-label="Yukarı" style="grid-area:u">▲</button>
-        <button class="pad" data-d="left" aria-label="Sola" style="grid-area:l">◀</button>
-        <button class="pad" data-d="down" aria-label="Aşağı" style="grid-area:d">▼</button>
-        <button class="pad" data-d="right" aria-label="Sağa" style="grid-area:r">▶</button>
-      </div>
-      <div class="hint">Klavye: ok tuşları ya da W A S D. Telefonda okları basılı tut ya da labirentte parmağını kaydır.<br>Doğru cevabın kapısına git. Canavarlar seni <b>görünce</b> kovalar! Doğru bildikçe can kazanırsın ama canavarlar da güçlenir.</div>
-    </div>
-  </section>
-
-  <section id="modeStreet" hidden>
+  
+  <section id="modeStreet">
   <div class="row" style="justify-content:flex-end">
     <div class="hud">
       <div class="chip money" title="Cebindeki para">Rs <span id="money">0</span></div>
@@ -334,6 +307,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offse
 <div class="modal" id="modal" hidden><div class="box" id="box" role="dialog" aria-modal="true"></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>window.__mode="street";</script>
 <script>
 (function(){
 const $=s=>document.querySelector(s);
@@ -449,7 +423,7 @@ function buildWorld(){
  CITIES.forEach((c,i)=>{const end=(CITIES[i+1]||[W])[0];h+=`<div class="sky" style="left:${c[0]}px;width:${end-c[0]}px;background:linear-gradient(${c[3]},#FFFFFF)"></div>`;
   if(i>0)h+=`<div class="citysign" style="left:${c[0]-48}px"><div>${c[1]}<br>→</div><i></i></div>`});
  for(let i=0;i<19;i++)h+=`<div class="cloud" style="left:${120+i*265}px;top:${20+(i*37)%60}px;width:${70+(i*23)%50}px;height:22px"></div>`;
- h+=`<div class="walk"></div><div class="road"><div class="rickshaw" style="left:3460px">${rickshaw()}</div><div class="rickshaw" style="left:4680px;animation-delay:-6s">${rickshaw()}</div></div>`;
+ h+=`<div class="walk"></div><div class="road"><div class="roadmark">OKUL DIŞI</div><div class="rickshaw" style="left:3460px">${rickshaw()}</div><div class="rickshaw" style="left:4680px;animation-delay:-6s">${rickshaw()}</div></div>`;
  ZONES.forEach(z=>{const [w,ht,svg]=ART[z.art];h+=`<div class="zone" id="z-${z.id}" style="left:${z.x-w/2}px;width:${w}px" data-id="${z.id}"><div class="sign">${z.name} <span class="ok" id="ok-${z.id}"></span></div><svg viewBox="0 0 ${w} ${ht}" width="${w}" height="${ht}">${svg}</svg></div>`});
  h+=`<div class="kaan-wrap" id="kaan"><div class="bubble-k" id="kb" hidden></div><div class="flip">${kaanSVG()}</div></div>`;
  world.innerHTML=h;
@@ -1109,264 +1083,7 @@ function finale(){
 setTimeout(()=>say(S.done.istanbul?"Tekrar hoş geldin! Hadi gezelim!":"İstanbul'dayım! Hadi Pakistan'a uçalım!",3500),400);
 })();
 </script>
-<style>
-.pic{display:flex;justify-content:center}
-.pic svg{width:100%;max-width:220px;height:auto;border-radius:10px;border:2px solid var(--line)}
-.learn ul{margin:4px 0 0;padding-left:20px;display:grid;gap:3px}
-.learn li::marker{color:var(--pink)}
-.mz-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.btn.sm{font-size:15px;padding:6px 12px}
-.dyk{border:2px solid var(--gold);border-radius:12px;padding:8px 12px;background:var(--surface)}
-.dyk b.t{font-family:var(--f-display);color:var(--pink);display:block;font-size:15px}
-.nb{background:var(--surface);border:3px solid var(--ink);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
-.nb h3{font-size:22px;color:var(--green)}
-.nb .empty{color:var(--muted);font-weight:700}
-.nb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.nb-item{border:2px solid var(--line);border-radius:12px;padding:8px 12px;min-width:0}
-.nb-item b.h{font-family:var(--f-display);font-size:17px;color:var(--teal);display:block}
-.nb-item ul{margin:2px 0 0;padding-left:18px;display:grid;gap:2px;font-size:15px}
-.nb-item li::marker{color:var(--pink)}
-.stars-c{font-family:var(--f-display);font-weight:800;font-size:17px;background:var(--surface);border:2px solid var(--line);border-radius:10px;padding:2px 10px;color:var(--gold)}
-</style>
-<script>
-(function(){
-const $=s=>document.querySelector(s);
-window.__mode="maze";
-let held=null,slide=false;
-function setMode(m){window.__mode=m;$("#modeMaze").hidden=m!=="maze";$("#modeStreet").hidden=m!=="street";
- $("#tabMaze").classList.toggle("on",m==="maze");$("#tabStreet").classList.toggle("on",m==="street");
- $("#tabMaze").setAttribute("aria-selected",m==="maze");$("#tabStreet").setAttribute("aria-selected",m==="street");
- held=null;if(m==="maze")requestAnimationFrame(resize)}
-$("#tabMaze").onclick=()=>setMode("maze");$("#tabStreet").onclick=()=>setMode("street");
 
-/* küçük resimler */
-function star(cx,cy,R,r,rot){let p=[];for(let i=0;i<10;i++){const a=rot+i*Math.PI/5,rr=i%2?r:R;p.push((cx+rr*Math.cos(a)).toFixed(1)+","+(cy+rr*Math.sin(a)).toFixed(1))}return p.join(" ")}
-function flag(x,y,w){const h=w*2/3,wb=w/4,gx=x+wb,gw=w-wb,cx=gx+gw/2,cy=y+h/2,s=w/300;
- return `<rect x="${x}" y="${y}" width="${wb}" height="${h}" fill="#FFF"/><rect x="${gx}" y="${y}" width="${gw}" height="${h}" fill="#01411C"/><circle cx="${cx}" cy="${cy}" r="${58*s}" fill="#FFF"/><circle cx="${cx+16*s}" cy="${cy-14*s}" r="${50*s}" fill="#01411C"/><polygon points="${star(cx+30*s,cy-28*s,17*s,7*s,-Math.PI/2+.6)}" fill="#FFF"/>`}
-const SKY=`<rect width="160" height="100" fill="#CFE8F2"/>`;
-const PIC={
- smog:`<rect width="160" height="100" fill="#C9C2B0"/><g fill="#7D786B"><rect x="10" y="30" width="22" height="60"/><rect x="38" y="14" width="20" height="76"/><rect x="64" y="40" width="26" height="50"/><rect x="118" y="24" width="22" height="66"/></g><rect width="160" height="100" fill="#E6E0D0" opacity=".45"/><rect x="0" y="88" width="160" height="12" fill="#5B574D"/><g transform="translate(92 66)"><rect width="40" height="22" rx="3" fill="#C2185B"/><path d="M0 -8 Q20 -16 40 -8 V0 H0Z" fill="#E9A100"/><circle cx="10" cy="12" r="4" fill="#FFC233"/><circle cx="24" cy="12" r="4" fill="#FFF"/><circle cx="8" cy="24" r="4" fill="#222"/><circle cx="34" cy="24" r="4" fill="#222"/></g>`,
- city:SKY+`<circle cx="134" cy="22" r="10" fill="#E9A100"/><path d="M0 76 Q40 40 80 70 T160 62 V100 H0Z" fill="#01411C" opacity=".45"/><path d="M60 90 L80 52 L100 90Z" fill="#FFF" stroke="#10261B"/><rect x="52" y="44" width="3" height="46" fill="#FFF" stroke="#10261B"/><rect x="105" y="44" width="3" height="46" fill="#FFF" stroke="#10261B"/><rect x="0" y="90" width="160" height="10" fill="#01411C"/>`,
- flag:`<rect width="160" height="100" fill="#DCEBDF"/><g transform="translate(20 10)">${flag(0,0,120)}</g>`,
- urdu:`<rect width="160" height="100" fill="#DCEBDF"/><rect x="14" y="12" width="132" height="66" rx="14" fill="#FFF" stroke="#C2185B" stroke-width="3"/><path d="M44 76 L38 94 L62 77Z" fill="#FFF" stroke="#C2185B" stroke-width="3"/><text x="80" y="58" text-anchor="middle" font-family="Noto Nastaliq Urdu,serif" font-size="30" fill="#01411C">اردو</text>`,
- food:`<rect width="160" height="100" fill="#F6E3C4"/><ellipse cx="70" cy="74" rx="56" ry="14" fill="#FFF" stroke="#10261B"/><path d="M24 72 Q70 16 116 72Z" fill="#E9A100"/><g fill="#C2185B"><circle cx="58" cy="54" r="4"/><circle cx="80" cy="44" r="4"/><circle cx="92" cy="60" r="4"/></g><g fill="#01411C"><circle cx="68" cy="42" r="2.5"/><circle cx="86" cy="54" r="2.5"/></g><path d="M126 46 h22 l-3 34 h-16Z" fill="#FFF" stroke="#10261B"/><rect x="129" y="50" width="16" height="6" fill="#0E7C86" opacity=".5"/>`,
- ruins:SKY+`<rect x="0" y="80" width="160" height="20" fill="#C8A26B"/><g fill="#B88E58" stroke="#10261B"><rect x="10" y="56" width="30" height="24"/><rect x="46" y="44" width="26" height="36"/><rect x="78" y="62" width="20" height="18"/></g><g transform="translate(104 34)"><rect x="6" y="26" width="44" height="20" fill="#B5452E" stroke="#10261B"/><path d="M18 28 Q28 4 38 28Z" fill="#FFF" stroke="#10261B"/><rect x="0" y="12" width="5" height="34" fill="#B5452E"/><rect x="51" y="12" width="5" height="34" fill="#B5452E"/></g>`,
- faisal:SKY+`<rect x="0" y="88" width="160" height="12" fill="#5FA35A"/><path d="M50 88 L80 30 L110 88Z" fill="#F4F4F4" stroke="#10261B" stroke-width="1.5"/><path d="M80 30 L70 88" stroke="#C9C9C9"/><path d="M80 30 L90 88" stroke="#C9C9C9"/>${[28,40,120,132].map(x=>`<rect x="${x-2}" y="24" width="4" height="64" fill="#F4F4F4" stroke="#10261B"/><path d="M${x-2} 24 L${x} 14 L${x+2} 24Z" fill="#10261B"/>`).join("")}`,
- music:`<rect width="160" height="100" fill="#DCEBDF"/><rect x="22" y="8" width="3" height="92" fill="#555"/><g transform="translate(25 10)">${flag(0,0,60)}</g><g fill="#C2185B"><circle cx="110" cy="70" r="7"/><rect x="115" y="34" width="3" height="36"/><circle cx="138" cy="62" r="7"/><rect x="143" y="26" width="3" height="36"/><path d="M115 34 L146 26 V32 L115 40Z"/></g>`,
- k2:`<rect width="160" height="100" fill="#BFE0EE"/><path d="M0 100 L34 56 L52 70 L86 10 L118 64 L132 50 L160 82 V100Z" fill="#6D7F8C" stroke="#10261B"/><path d="M86 10 L76 30 L84 26 L90 34 L96 26 L101 30Z" fill="#FFF"/><text x="86" y="8" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="9" fill="#10261B">K2 · 8611 m</text>`,
- cricket:`<rect width="160" height="100" fill="#AEDBA8"/><rect x="0" y="70" width="160" height="30" fill="#5FA35A"/><g transform="translate(40 14) rotate(25)"><rect x="0" y="0" width="7" height="20" rx="3" fill="#10261B"/><rect x="-4" y="18" width="15" height="56" rx="6" fill="#E9A100" stroke="#10261B"/></g><circle cx="98" cy="36" r="8" fill="#C62828"/><g transform="translate(128 74)"><circle r="16" fill="#FFF" stroke="#10261B"/><polygon points="0,-6 6,-2 4,5 -4,5 -6,-2" fill="#10261B"/></g>`
-};
-
-const LV=[
- {t:"Temiz mi, kirli mi?",pic:"smog",learn:["Pakistan'ın büyük şehirleri çok kalabalık. <b>Karaçi</b>'de 20 milyondan fazla insan yaşar, bazı sokaklarda çöp ve trafik sorunu var.","<b>Lahor</b>'da kışın duman ve sis karışımı <b>smog</b> o kadar yoğun olur ki okullar tatil edilebilir.","Ama başkent <b>İslamabad</b> yeşil ve düzenli, kuzeydeki dağ köyleri tertemiz. Yani cevap: <b>yere göre değişir</b>."],
-  q:"Pakistan'ın büyük şehirlerinde kirlilik sorunu var mı?",a:["Evet","Hayır"],c:0,hint:"Karaçi ve Lahor'u hatırla.",why:"Büyük şehirlerde (Karaçi, Lahor) kirlilik sorunu var; İslamabad ve kuzey dağları ise temiz.",
-  bonus:["Kamyonlar rengârenk resimlerle boyanır. Buna <b>kamyon sanatı</b> (truck art) denir.","İslamabad, ormanlık <b>Margalla tepeleriyle</b> çevrili, ağaçlık bir şehirdir."]},
- {t:"Başkent",pic:"city",learn:["Pakistan <b>14 Ağustos 1947</b>'de kuruldu. Her yıl bu gün bayram gibi kutlanır.","Başkenti <b>İslamabad</b>, en kalabalık şehri <b>Karaçi</b>. Tıpkı bizdeki Ankara ve İstanbul gibi!","Nüfusu yaklaşık <b>241 milyon</b> (2023). Türkiye'nin neredeyse 3 katı."],
-  q:"Pakistan'ın başkenti hangisi?",a:["Karaçi","İslamabad","Lahor"],c:1,hint:"En kalabalık şehir başkent değil, Ankara gibi.",why:"Başkent İslamabad; en kalabalık şehir Karaçi.",
-  bonus:["Kurucusu <b>Muhammed Ali Cinnah</b>. Halk ona \"Kaid-i Azam\" yani \"Büyük Lider\" der.","Para birimi <b>Pakistan rupisi</b>."]},
- {t:"Bayrak",pic:"flag",learn:["Bayrak <b>koyu yeşil</b>; solunda dikey <b>beyaz bir şerit</b>, ortasında beyaz <b>hilal ve yıldız</b> var.","<b>Yeşil</b> Müslüman çoğunluğu, <b>beyaz şerit</b> diğer dinlerden vatandaşları (Hristiyan, Hindu, Sih...) temsil eder.","Türk bayrağı gibi onda da <b>ay-yıldız</b> var."],
-  q:"Bayraktaki beyaz şerit kimleri temsil eder?",a:["Diğer dinlerden vatandaşları","Askerleri","Çiftçileri"],c:0,hint:"Yeşil Müslümanları temsil ediyorsa beyaz kimleri?",why:"Beyaz şerit diğer dinlerden vatandaşları, yeşil Müslüman çoğunluğu temsil eder.",
-  bonus:["Bayrak <b>11 Ağustos 1947</b>'de, bağımsızlıktan 3 gün önce kabul edildi.","<b>Hilal</b> ilerlemeyi, <b>yıldız</b> ışığı ve bilgiyi anlatır."]},
- {t:"Dil",pic:"urdu",learn:["Milli dil <b>Urduca</b>. Arap harfleriyle, <b>sağdan sola</b> yazılır.","<b>Kitap, dost, dünya, kalem, hava, şehir, insan</b>... Yüzlerce ortak kelimemiz var!","Sürpriz: <b>\"Urdu\" kelimesi Türkçe \"ordu\"dan gelir.</b> Dil, farklı halkların bir arada yaşadığı ordugâhlarda gelişti."],
-  q:"\"Urdu\" kelimesi Türkçe \"ordu\" kelimesinden mi gelir?",a:["Evet","Hayır"],c:0,hint:"Dil ordugâhlarda gelişti.",why:"Evet, \"Urdu\" Türkçe \"ordu\"dan gelir.",
-  bonus:["Evlerde en çok konuşulan dil <b>Pencapça</b>. <b>İngilizce</b> de resmi dil.","\"Teşekkürler\" Urducada <b>\"şükriya\"</b>, \"merhaba\" ise <b>\"esselamü aleyküm\"</b>."]},
- {t:"Yemek",pic:"food",learn:["En ünlü yemek <b>biryani</b>: etli, baharatlı pilav.","Pakistan yemekleri genelde <b>acıdır</b>. Acıyı <b>lassi</b> söndürür: yoğurtla yapılan, ayrana benzeyen içecek.","Yemek <b>sağ elle</b> yenir; <b>roti</b> ya da <b>naan</b> ekmeği kaşık gibi kullanılır."],
-  q:"Pakistan'ın en ünlü pilav yemeği hangisi?",a:["Mantı","Biryani","Lahmacun"],c:1,hint:"Mantı ve lahmacun bizim yemeklerimiz!",why:"Biryani: etli, baharatlı pilav.",
-  bonus:["<b>Nihari</b>: gece boyu pişen et yemeği, kahvaltıda yenir!","<b>Gol gappay</b>: içi ekşi su dolu çıtır toplar, tek lokmada yenir."]},
- {t:"Binalar",pic:"ruins",learn:["Pakistan'da <b>4500 yıllık</b> Mohenjo-daro şehrinin kalıntıları var. O zaman bile düzenli sokakları ve kanalizasyonu varmış!","Lahor'daki <b>Badşahi Camii</b> 1673'te, Babür İmparatorluğu döneminde kırmızı taştan yapıldı.","<b>Karaçi</b>'de ise modern gökdelenler yükseliyor."],
-  q:"Pakistan'daki binaların hepsi yeni mi?",a:["Evet","Hayır"],c:1,hint:"4500 yıllık bir şehir vardı...",why:"Hayır; 4500 yıllık kalıntılar, eski camiler ve yeni gökdelenler bir arada.",
-  bonus:["Mohenjo-daro <b>UNESCO Dünya Mirası</b> listesinde.","<b>Lahor Kalesi</b> ve <b>Minar-ı Pakistan</b> kulesi Lahor'un simgeleri."]},
- {t:"Türk mimar",pic:"faisal",learn:["İslamabad'daki <b>Faysal Camii</b> 1986'da açıldı.","Kubbesi yok; dev bir <b>çadıra</b> benziyor, dört ince minaresi var.","Onu <b>Türk mimar Vedat Dalokay</b> tasarladı."],
-  q:"Faysal Camii'ni tasarlayan mimar hangi ülkeden?",a:["Mısır","İngiltere","Türkiye"],c:2,hint:"Mimarın adı Vedat Dalokay.",why:"Faysal Camii'ni Türk mimar Vedat Dalokay tasarladı.",
-  bonus:["Faysal Camii açıldığında <b>dünyanın en büyük camisiydi</b>.","Dalokay bu tasarımın fikrini önce Ankara'daki Kocatepe Camii yarışması için geliştirmişti."]},
- {t:"Milli marş",pic:"music",learn:["Milli marşın adı <b>Kaumi Terane</b>, yani \"Milli Marş\".","<b>1954</b>'te kabul edildi ve yaklaşık <b>80 saniye</b> sürer.","Sözleri Urduca ama içinde çok <b>Farsça</b> kelime var. Çalarken herkes hazır ol'da durur."],
-  q:"Pakistan milli marşı yaklaşık ne kadar sürer?",a:["30 saniye","80 saniye","5 dakika"],c:1,hint:"Bir buçuk dakikadan biraz kısa.",why:"Kaumi Terane yaklaşık 80 saniye sürer.",
-  bonus:["Sözlerini şair <b>Hafız Celendhari</b> yazdı.","Önce <b>müziği</b> bestelendi, sözler sonradan müziğe göre yazıldı."]},
- {t:"Dağlar",pic:"k2",learn:["Dünyada 8000 metreyi geçen 14 dağ var; bunların <b>5'i Pakistan'da</b>.","En ünlüsü <b>K2</b>: 8611 metreyle dünyanın <b>en yüksek ikinci</b> dağı. Birincisi Everest.","K2'ye tırmanmak Everest'ten çok daha zordur; ona \"Vahşi Dağ\" denir."],
-  q:"K2 dünyanın en yüksek dağı mı?",a:["Evet","Hayır"],c:1,hint:"Birincisi Everest.",why:"Hayır; K2 dünyanın en yüksek ikinci dağı (8611 m).",
-  bonus:["<b>Karakurum Otoyolu</b> Çin'e kadar gider; dünyanın en yüksek asfalt yollarından.","Milli hayvan <b>markhor</b>: vida gibi kıvrık boynuzlu dağ keçisi."]},
- {t:"Spor",pic:"cricket",learn:["Pakistan'da en sevilen spor <b>kriket</b>. Pakistan <b>1992</b>'de Kriket Dünya Kupası'nı kazandı.","<b>Sialkot</b> şehri dünyadaki elle dikilen futbol toplarının büyük kısmını üretir.","FIFA Dünya Kupası'nda kullanılan toplar bile Sialkot'ta üretildi!"],
-  q:"Sialkot şehri neyi üretmesiyle ünlü?",a:["Halı","Futbol topu","Otomobil"],c:1,hint:"Dünya Kupası'nda kullanılıyor.",why:"Sialkot, elle dikilen futbol toplarıyla ünlü.",
-  bonus:["Resmi milli spor ise <b>çim hokeyi</b>.","Pakistan ile Türkiye kardeş ülkeler. \"Pakistan Türkiye dosti zindabad!\" = Pakistan-Türkiye dostluğu yaşasın!"]}
-];
-const COLS=21,ROWS=15,MAXL=8,START=5;
-const DOORC=["#C2185B","#0E7C86","#B07800"],LET=["A","B","C"];
-const DIRS={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
-let lv=0,lives=START,g=null,p={x:1,y:1},mons=[],doors=[],stars=[],inv=0,phase="learn",lastMove=0,lastMon=0,correct=0,tile=24,flashUntil=0,notes={};
-try{const s=JSON.parse(localStorage.getItem("kaan-maze2")||"null");if(s){lv=Math.min(s.lv||0,LV.length-1);lives=s.lives>0?s.lives:START;correct=s.correct||0;notes=s.notes||{}}}catch(e){}
-function save(){try{localStorage.setItem("kaan-maze2",JSON.stringify({lv,lives,correct,notes}))}catch(e){}}
-
-/* defter ve araçlar */
-const tools=document.createElement("div");tools.className="mz-tools";
-tools.innerHTML=`<button class="btn sm ghost" id="mzCard">Bilgi kartını aç</button><span class="stars-c" id="mzStars"></span>`;
-$("#mzMsg").after(tools);
-const nb=document.createElement("section");nb.className="nb";nb.id="mzNb";
-$(".mz-controls").after(nb);
-$("#mzCard").onclick=()=>{if(phase==="play")learnCard(true)};
-
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function power(i){return{n:Math.min(5,1+Math.floor(i/2)),ms:Math.max(150,470-i*34),sight:5+i,mem:8+i*2,horns:Math.min(3,Math.floor(i/3))}}
-function speed(i){return Math.round((470-power(i).ms)/34)+1}
-function gainFor(i){return 1+(i>=3?1:0)+(i>=6?1:0)}
-
-function gen(){
- const m=Array.from({length:ROWS},()=>Array(COLS).fill(1));
- const st=[[1,1]];m[1][1]=0;
- while(st.length){const [x,y]=st[st.length-1];
-  const nb=shuffle([[2,0],[-2,0],[0,2],[0,-2]]).map(([dx,dy])=>[x+dx,y+dy,x+dx/2,y+dy/2]).filter(([nx,ny])=>nx>0&&ny>0&&nx<COLS-1&&ny<ROWS-1&&m[ny][nx]===1);
-  if(!nb.length){st.pop();continue}const [nx,ny,wx,wy]=nb[0];m[wy][wx]=0;m[ny][nx]=0;st.push([nx,ny])}
- let made=0;for(let t=0;t<600&&made<20;t++){const x=1+Math.floor(Math.random()*(COLS-2)),y=1+Math.floor(Math.random()*(ROWS-2));
-  if(m[y][x]!==1)continue;
-  if((x%2===0&&y%2===1&&m[y][x-1]===0&&m[y][x+1]===0)||(x%2===1&&y%2===0&&m[y-1][x]===0&&m[y+1][x]===0)){m[y][x]=0;made++}}
- return m}
-function open(x,y){return x>=0&&y>=0&&x<COLS&&y<ROWS&&g[y][x]===0&&!doors.some(d=>d.dead&&d.x===x&&d.y===y)}
-function bfs(sx,sy){const d=Array.from({length:ROWS},()=>Array(COLS).fill(-1));const q=[[sx,sy]];d[sy][sx]=0;let h=0;
- while(h<q.length){const [x,y]=q[h++];for(const [dx,dy] of Object.values(DIRS)){const nx=x+dx,ny=y+dy;if(open(nx,ny)&&d[ny][nx]<0){d[ny][nx]=d[y][x]+1;q.push([nx,ny])}}}return d}
-function cells(fn){const out=[];for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(fn(x,y))out.push([x,y]);return out}
-function setupLevel(){g=gen();p={x:1,y:1};
- const L=LV[lv];const corners=shuffle([[COLS-2,1],[1,ROWS-2],[COLS-2,ROWS-2]]);
- doors=L.a.map((t,k)=>({x:corners[k][0],y:corners[k][1],k,dead:false}));
- const d=bfs(1,1);const isDoor=(x,y)=>doors.some(q=>q.x===x&&q.y===y);
- mons=shuffle(cells((x,y)=>g[y][x]===0&&d[y][x]>=10&&!isDoor(x,y))).slice(0,power(lv).n).map(([x,y])=>({x,y,dir:[0,0],chase:0}));
- stars=shuffle(cells((x,y)=>g[y][x]===0&&d[y][x]>=5&&!isDoor(x,y)&&!mons.some(m=>m.x===x&&m.y===y))).slice(0,L.bonus.length).map(([x,y],i)=>({x,y,i,got:false}));
- inv=0;ui();save()}
-
-function ui(){
- let h="";for(let k=0;k<Math.max(lives,START);k++)h+=`<span class="${k<lives?"":"lost"}">♥</span>`;
- $("#mzLives").innerHTML=h;$("#mzLives").setAttribute("aria-label",lives+" can");
- $("#mzLv").textContent=lv+1;$("#mzMon").textContent=`Canavar: ${power(lv).n} · Hız: ${speed(lv)}/10`;
- $("#mzQ").textContent=LV[lv].q;
- $("#mzStars").textContent=`Bilgi yıldızı: ${stars.filter(s=>s.got).length}/${stars.length}`;
- $("#mzLeg").innerHTML=doors.map(d=>`<div class="door ${d.dead?"dead":""}"><i style="background:${DOORC[d.k]}">${LET[d.k]}</i>${LV[lv].a[d.k]}</div>`).join("");
- notebook()}
-function addNote(i,txt){(notes[i]=notes[i]||[]);if(!notes[i].includes(txt))notes[i].push(txt);save();notebook()}
-function notebook(){const keys=Object.keys(notes).map(Number).sort((a,b)=>a-b);
- nb.innerHTML=`<div class="row" style="justify-content:space-between"><h3>Defterimiz: öğrendiklerimiz</h3><button class="btn sm ghost" id="nbReset">Oyunu sıfırla</button></div>`+
- (keys.length?`<div class="nb-grid">${keys.map(i=>`<div class="nb-item"><b class="h">${i+1}. ${LV[i].t}</b><ul>${notes[i].map(t=>`<li>${t}</li>`).join("")}</ul></div>`).join("")}</div>`
-  :`<p class="empty">Doğru cevapları ve topladığın bilgi yıldızlarını buraya yazacağız.</p>`);
- $("#nbReset").onclick=()=>{nb.querySelector("h3").textContent="Emin misin? Tekrar bas.";const b=$("#nbReset");b.textContent="Evet, sıfırla";b.onclick=()=>{lv=0;lives=START;correct=0;notes={};setupLevel();learnCard();msg("")}}}
-function msg(t,c){const m=$("#mzMsg");m.className="mz-msg "+(c||"");m.innerHTML=t}
-function show(html){const o=$("#mzOv");o.innerHTML=`<div class="mz-card">${html}</div>`;o.hidden=false;const b=o.querySelector("button");if(b)b.focus({preventScroll:true})}
-function hide(){$("#mzOv").hidden=true}
-
-function learnCard(resume){const prev=phase;phase="learn";held=null;const L=LV[lv],pw=power(lv);
- show(`<div class="eyebrow">Bölüm ${lv+1}/10 · ${L.t}</div>
- <div class="pic"><svg viewBox="0 0 160 100">${PIC[L.pic]}</svg></div>
- <div class="learn"><b class="t">Önce öğren</b><ul>${L.learn.map(x=>`<li>${x}</li>`).join("")}</ul></div>
- ${L.pic==="music"?`<button class="btn ghost sm" id="mzListen" style="align-self:flex-start">▶ Marşı dinle</button>`:""}
- <p><b>Soru:</b> ${L.q}</p>
- ${resume?"":`<p style="font-size:14px;color:var(--muted)">Bu bölümde <b>${pw.n} canavar</b> var, hızları <b>${speed(lv)}/10</b>.${lv>0?" Canavarlar güçlendi!":" Canavarlar seni görünce kovalamaya başlar."} Labirentte <b>${L.bonus.length} bilgi yıldızı</b> var, topla! Doğru kapıya ulaşırsan <b>+${gainFor(lv)} can</b>.</p>`}
- <button class="btn pink" id="go">${resume?"Oyuna dön":"Labirente gir"}</button>`);
- const ml=$("#mzListen");if(ml&&window.__anthem)ml.onclick=()=>window.__anthem.toggle(ml);
- $("#go").onclick=()=>{if(window.__anthem)window.__anthem.stop();hide();phase="play";lastMon=performance.now()+(resume?300:600);if(!resume)msg("Doğru cevabın kapısını bul! Yolda bilgi yıldızlarını topla.")}}
-
-function step(dx,dy){const nx=p.x+dx,ny=p.y+dy;if(!open(nx,ny))return false;p.x=nx;p.y=ny;checkStar();checkDoor();if(phase==="play")checkHit();return true}
-function checkStar(){const s=stars.find(q=>!q.got&&q.x===p.x&&q.y===p.y);if(!s)return;s.got=true;const t=LV[lv].bonus[s.i];addNote(lv,t);ui();
- msg(`<div class="dyk"><b class="t">Biliyor muydun?</b>${t}</div>`)}
-function checkDoor(){const dr=doors.find(d=>d.x===p.x&&d.y===p.y&&!d.dead);if(!dr)return;const L=LV[lv];
- if(dr.k===L.c)win();else{dr.dead=true;loseLife(`Yanlış kapı! "${L.a[dr.k]}" doğru cevap değil. Bir can gitti, başa döndün.<br><span style="color:var(--ink)">İpucu: ${L.hint}</span>`)}}
-function checkHit(){if(performance.now()<inv)return;if(mons.some(m=>m.x===p.x&&m.y===p.y))loseLife("Canavar seni yakaladı! Bir can gitti, başa döndün.")}
-function loseLife(t){lives--;flashUntil=performance.now()+400;ui();save();
- if(lives<=0){gameOver();return}
- p={x:1,y:1};inv=performance.now()+1800;held=null;
- const d=bfs(1,1);const far=cells((x,y)=>d[y][x]>=10);
- mons.forEach(m=>{m.chase=0;if(d[m.y][m.x]>=0&&d[m.y][m.x]<6&&far.length){const f=far[Math.floor(Math.random()*far.length)];m.x=f[0];m.y=f[1]}});
- msg(t,"no")}
-function sees(m,r){
- if(m.x===p.x){const a=Math.min(m.y,p.y),b=Math.max(m.y,p.y);if(b-a>r)return false;for(let y=a+1;y<b;y++)if(g[y][m.x]!==0)return false;return true}
- if(m.y===p.y){const a=Math.min(m.x,p.x),b=Math.max(m.x,p.x);if(b-a>r)return false;for(let x=a+1;x<b;x++)if(g[m.y][x]!==0)return false;return true}
- return false}
-function monStep(){const pw=power(lv);let dP=null;const safe=performance.now()<inv;
- for(const m of mons){
-  if(!safe&&sees(m,pw.sight))m.chase=pw.mem;
-  if(m.chase>0&&!safe){m.chase--;dP=dP||bfs(p.x,p.y);let best=null,bd=1e9;
-   for(const dd of Object.values(DIRS)){const nx=m.x+dd[0],ny=m.y+dd[1];if(open(nx,ny)&&dP[ny][nx]>=0&&dP[ny][nx]<bd){bd=dP[ny][nx];best=dd}}
-   if(best){m.x+=best[0];m.y+=best[1];m.dir=best}}
-  else{const opts=Object.values(DIRS).filter(([dx,dy])=>open(m.x+dx,m.y+dy));let ch=opts.filter(([dx,dy])=>!(dx===-m.dir[0]&&dy===-m.dir[1]));if(!ch.length)ch=opts;
-   const fwd=ch.find(([dx,dy])=>dx===m.dir[0]&&dy===m.dir[1]);const dd=(fwd&&Math.random()<.65)?fwd:ch[Math.floor(Math.random()*ch.length)];
-   if(dd){m.x+=dd[0];m.y+=dd[1];m.dir=dd}}}
- checkHit()}
-
-function win(){phase="result";held=null;correct++;const before=lives;lives=Math.min(MAXL,lives+gainFor(lv));const got=lives-before;const L=LV[lv];
- addNote(lv,L.why);ui();
- const missed=stars.filter(s=>!s.got).map(s=>L.bonus[s.i]);
- missed.forEach(t=>addNote(lv,t));
- const last=lv>=LV.length-1;
- if(!last){lv++;save();lv--}
- const nx=last?null:power(lv+1);
- show(`<div class="eyebrow">Bölüm ${lv+1} tamam</div><h3>Doğru: ${L.a[L.c]}!</h3><p>${L.why}</p>
- ${missed.length?`<div class="dyk"><b class="t">Kaçırdığın bilgi yıldızları</b><ul style="margin:2px 0 0;padding-left:18px">${missed.map(t=>`<li>${t}</li>`).join("")}</ul></div>`:`<div class="dyk"><b class="t">Harika!</b>Bütün bilgi yıldızlarını topladın.</div>`}
- <div class="gain">${got>0?"+"+got+" can kazandın!":"Can sınırı "+MAXL+", daha fazla can alamazsın."}</div>
- ${last?"":`<p style="font-size:14px;color:var(--muted)">Sonraki bölümde canavarlar güçleniyor: <b>${nx.n} canavar</b>, hız <b>${speed(lv+1)}/10</b>. Bir sonraki doğru cevap <b>+${gainFor(lv+1)} can</b> getirecek.</p>`}
- <button class="btn" id="nx">${last?"Sonucu gör ★":"Sonraki bölüm →"}</button>`);
- $("#nx").onclick=()=>{if(last){final();return}lv++;setupLevel();learnCard()}}
-function gameOver(){phase="over";held=null;lives=0;
- show(`<div class="eyebrow">Bölüm ${lv+1} · ${LV[lv].t}</div><h3>Canın bitti!</h3>
- <p>Ama pes etmek yok! En baştan değil, <b>bu bölümden ${START} canla</b> devam ediyorsun. Labirent yenilenecek.</p>
- <div class="learn"><b class="t">Tekrar hatırla</b><ul>${LV[lv].learn.map(x=>`<li>${x}</li>`).join("")}</ul></div>
- <button class="btn pink" id="rs">Bu bölümden devam et</button>`);
- $("#rs").onclick=()=>{lives=START;setupLevel();learnCard();msg("")}}
-function final(){phase="won";lv=LV.length-1;save();
- show(`<div class="eyebrow">10/10</div><h3>Labirentin ustası oldun!</h3><p><b>${lives} canla</b> bitirdin. Öğrendiğin her şey aşağıdaki <b>defterde</b>.</p>
- <button class="btn" id="rs">Defteri göster</button><button class="btn ghost" id="again">Tekrar oyna (defter kalır)</button>`);
- $("#rs").onclick=()=>{hide();nb.scrollIntoView({behavior:"smooth"})};
- $("#again").onclick=()=>{lv=0;lives=START;correct=0;setupLevel();learnCard();msg("")}}
-
-/* çizim */
-const cv=$("#mzCv"),ctx=cv.getContext("2d");let col={},colT=0;
-function colors(){const cs=getComputedStyle(document.documentElement);col={floor:cs.getPropertyValue("--surface").trim(),wall:cs.getPropertyValue("--green").trim(),soft:cs.getPropertyValue("--green-soft").trim()}}
-function resize(){const w=$("#mzWrap").clientWidth;if(!w)return;tile=Math.max(12,Math.floor(Math.min(w,780)/COLS));
- const dpr=window.devicePixelRatio||1;cv.style.width=tile*COLS+"px";cv.style.height=tile*ROWS+"px";cv.width=tile*COLS*dpr;cv.height=tile*ROWS*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);colors()}
-new ResizeObserver(resize).observe($("#mzWrap"));
-function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
-function draw(now){if(!g)return;if(now-colT>1000){colT=now;colors()}const T=tile;
- ctx.fillStyle=col.floor;ctx.fillRect(0,0,T*COLS,T*ROWS);
- ctx.fillStyle=col.wall;for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)if(g[y][x]===1)ctx.fillRect(x*T,y*T,T,T);
- ctx.fillStyle=col.soft;ctx.fillRect(T,T,T,T);
- for(const s of stars)if(!s.got){const cx=s.x*T+T/2,cy=s.y*T+T/2,pulse=1+.12*Math.sin(now/200);ctx.fillStyle="#FFC233";ctx.strokeStyle="#B07800";ctx.lineWidth=1.2;ctx.beginPath();
-  for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,r=(i%2?T*.17:T*.4)*pulse;const px=cx+r*Math.cos(a),py=cy+r*Math.sin(a);i?ctx.lineTo(px,py):ctx.moveTo(px,py)}ctx.closePath();ctx.fill();ctx.stroke()}
- for(const d of doors){ctx.fillStyle=d.dead?"#888":DOORC[d.k];rr(d.x*T+2,d.y*T+2,T-4,T-4,4);ctx.fill();
-  ctx.fillStyle="#FFF";ctx.font=`800 ${Math.round(T*.6)}px "Baloo 2",sans-serif`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(d.dead?"✕":LET[d.k],d.x*T+T/2,d.y*T+T/2+1)}
- const pw=power(lv);
- for(const m of mons){const cx=m.x*T+T/2,cy=m.y*T+T/2,r=T*.42,ch=m.chase>0&&now>=inv;
-  ctx.fillStyle=ch?"#D32F2F":"#6A3FA0";ctx.beginPath();ctx.arc(cx,cy-r*.1,r,Math.PI,0);ctx.lineTo(cx+r,cy+r*.8);
-  for(let k=0;k<4;k++){const x1=cx+r-(k+.5)*(2*r/4),x2=cx+r-(k+1)*(2*r/4);ctx.lineTo(x1,cy+r*(k%2?.8:.45));ctx.lineTo(x2,cy+r*.8)}
-  ctx.closePath();ctx.fill();
-  for(let k=0;k<pw.horns;k++){const hx=cx-r*.6+k*(r*.6);ctx.fillStyle="#FFC233";ctx.beginPath();ctx.moveTo(hx-r*.15,cy-r*.9);ctx.lineTo(hx,cy-r*1.4);ctx.lineTo(hx+r*.15,cy-r*.9);ctx.fill()}
-  const lx=Math.sign(p.x-m.x)*r*.12,ly=Math.sign(p.y-m.y)*r*.12;
-  for(const ex of [-.35,.35]){ctx.fillStyle="#FFF";ctx.beginPath();ctx.arc(cx+ex*r,cy-r*.15,r*.25,0,7);ctx.fill();ctx.fillStyle="#111";ctx.beginPath();ctx.arc(cx+ex*r+lx,cy-r*.15+ly,r*.12,0,7);ctx.fill()}
-  if(ch){ctx.strokeStyle="#111";ctx.lineWidth=Math.max(1.5,T*.07);ctx.beginPath();ctx.moveTo(cx-r*.6,cy-r*.55);ctx.lineTo(cx-r*.15,cy-r*.38);ctx.moveTo(cx+r*.6,cy-r*.55);ctx.lineTo(cx+r*.15,cy-r*.38);ctx.stroke();
-   ctx.fillStyle="#D32F2F";ctx.font=`800 ${Math.round(T*.7)}px "Baloo 2",sans-serif`;ctx.textAlign="center";ctx.fillText("!",cx+r*.9,cy-r*1.1)}}
- const blink=now<inv&&Math.floor(now/120)%2===0;
- if(!blink){const cx=p.x*T+T/2,cy=p.y*T+T/2,r=T*.4;
-  ctx.fillStyle="#E8B48A";ctx.beginPath();ctx.arc(cx,cy+r*.05,r,0,7);ctx.fill();ctx.strokeStyle="#10261B";ctx.lineWidth=1.5;ctx.stroke();
-  ctx.fillStyle="#0E7C86";ctx.beginPath();ctx.arc(cx,cy-r*.05,r,Math.PI,0);ctx.lineTo(cx+r*1.35,cy-r*.05);ctx.lineTo(cx-r,cy-r*.05);ctx.fill();
-  ctx.fillStyle="#10261B";ctx.beginPath();ctx.arc(cx-r*.3,cy+r*.3,r*.12,0,7);ctx.arc(cx+r*.3,cy+r*.3,r*.12,0,7);ctx.fill();
-  ctx.beginPath();ctx.arc(cx,cy+r*.45,r*.3,.2,Math.PI-.2);ctx.stroke()}
- if(now<flashUntil){ctx.fillStyle="rgba(211,47,47,.3)";ctx.fillRect(0,0,T*COLS,T*ROWS)}}
-
-/* kontroller */
-const KEYS={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
-addEventListener("keydown",e=>{if(window.__mode!=="maze")return;const k=KEYS[e.key];if(!k)return;if(phase!=="play")return;e.preventDefault();
- if(held!==k){held=k;slide=false;const now=performance.now();if(now-lastMove>70){lastMove=now;step(...DIRS[k])}}});
-addEventListener("keyup",e=>{const k=KEYS[e.key];if(k&&held===k&&!slide)held=null});
-addEventListener("blur",()=>{held=null});
-document.querySelectorAll(".dpad .pad").forEach(b=>{const k=b.dataset.d;
- b.addEventListener("pointerdown",e=>{e.preventDefault();if(phase!=="play")return;held=k;slide=false;lastMove=performance.now();step(...DIRS[k])});
- ["pointerup","pointerleave","pointercancel"].forEach(ev=>b.addEventListener(ev,()=>{if(held===k&&!slide)held=null}))});
-let sw=null;const wrap=$("#mzWrap");
-wrap.addEventListener("pointerdown",e=>{if(phase==="play")sw=[e.clientX,e.clientY]});
-wrap.addEventListener("pointerup",e=>{if(!sw)return;const dx=e.clientX-sw[0],dy=e.clientY-sw[1];sw=null;if(Math.max(Math.abs(dx),Math.abs(dy))<18)return;
- held=Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up");slide=true});
-
-function tick(now){if(window.__mode==="maze"){
- if(phase==="play"){if(held&&now-lastMove>=125){lastMove=now;const ok=step(...DIRS[held]);if(!ok&&slide)held=null}
-  if(now-lastMon>=power(lv).ms){lastMon=now;monStep()}}
- draw(now)}requestAnimationFrame(tick)}
-setupLevel();resize();learnCard();requestAnimationFrame(tick);
-if(correct>0)msg(`Kaldığın yerden devam: ${lv+1}. bölüm.`,"ok");
-})();
-</script>
 <script>
 (function(){const b=document.getElementById("resetAll");let t=0;
  b.onclick=()=>{if(!b.classList.contains("sure")){b.classList.add("sure");b.textContent="Emin misin? Tekrar bas";clearTimeout(t);t=setTimeout(()=>{b.classList.remove("sure");b.textContent="↺ Baştan başla"},4000);return}
